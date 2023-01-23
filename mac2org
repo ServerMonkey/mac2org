@@ -1,34 +1,13 @@
-#!/usr/bin/env python3
-# coding=utf-8
+#!/bin/sh
 
-import netaddr
-import sys
+SEARCH=$(echo "$1" | sed 's/:/-/g' | cut -c-8 | tr '[:lower:]' '[:upper:]')
 
-
-def get_oui_info(mac):
-    remove_chars = '.-:ghijklmnopqrstuvwxyz!@#$%^&*()_+={};,<>/?"\''
-    mac = mac.lower()
-    for char in remove_chars:
-        mac = mac.replace(char, '')
-    if len(mac) != 12:
-        print('Unformatted Input is not 12 characters')
-    else:
-        try:
-            oui = netaddr.EUI(mac).oui
-            # org
-            print(oui.registration().org)
-            # address
-            print(", ".join(oui.registration().address))
-            # OUI
-            print(oui.registration().oui)
-        except:
-            print('OUI Not Registered or Invalid')
-
-
-if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        mac_in = [input("Enter MAC Address: ")]
-    else:
-        mac_in = [item for item in sys.argv[1::]]
-    for addr in mac_in:
-        get_oui_info(addr)
+if [ "$SEARCH" = "52-54-00" ]; then
+    echo "QEMU virtual address"
+elif [ "$SEARCH" = "00-16-3E" ]; then
+    echo "XEN virtual address"
+else
+    DATA=$(grep -i "$SEARCH" <"/usr/share/ieee-data/oui.txt")
+    echo "$DATA" | grep "(hex)" | sed 's/(hex)//g' | sed 's/\t//g' |
+        sed 's/  / /g'
+fi

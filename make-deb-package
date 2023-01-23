@@ -32,8 +32,8 @@ echo "Copying relevant source files"
 mkdir -p "$PATH_SHARE"
 cp -t "$PATH_SHARE" "README.md" "copyright" || exit 1
 mkdir -p "$PATH_BIN"
-chmod 0755 "mac2org"
-cp -t "$PATH_BIN" "mac2org" || exit 1
+chmod 0755 "mac2org" "org2mac"
+cp -t "$PATH_BIN" "mac2org" "org2mac" || exit 1
 
 # create Debian control file
 echo "Creating CONTROL file"
@@ -43,7 +43,7 @@ Version: $VERSION
 Section: net
 Priority: optional
 Architecture: all
-Depends: python3
+Depends: python3, ieee-data
 Maintainer: Bodo Endres <dev@muspekaren.se>
 Description: Convert a MAC address to the name and address of the organization.
 " >"$PATH_TARGET/control"

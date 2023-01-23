@@ -1,0 +1,6 @@
+#!/bin/sh
+
+SEARCH="$1"
+
+DATA=$(grep -i "$SEARCH" <"/usr/share/ieee-data/oui.txt")
+echo "$DATA" | grep "(hex)" | sed 's/(hex)//g' | sed 's/\t//g' | sed 's/  / /g'
